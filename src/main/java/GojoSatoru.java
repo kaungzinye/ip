@@ -1,5 +1,7 @@
+import java.lang.reflect.Array;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class GojoSatoru {
     public static void main(String[] args) {
@@ -11,10 +13,21 @@ public class GojoSatoru {
         System.out.println(introText);
         Scanner userScanner = new Scanner(System.in);
         String userInput = userScanner.nextLine();
+        ArrayList<String> items = new ArrayList<>();
         while (!Objects.equals(userInput, "bye")){
-            System.out.println("   ____________________________________________________________\n   " +
-                userInput + "\n"
-            + "   ____________________________________________________________\n");
+            if (Objects.equals(userInput, "list")){
+                System.out.println("   ____________________________________________________________\n   ");
+                for (int i = 0; i < items.size(); i++) {
+                    System.out.println("    " + Integer.toString(i + 1) + ". " + items.get(i));
+                }
+                System.out.println("   ____________________________________________________________\n");
+            }
+            else {
+                items.add(userInput);
+                System.out.println("   ____________________________________________________________\n   added: " +
+                    userInput + "\n"
+                    + "   ____________________________________________________________\n");
+            }
             userInput = userScanner.nextLine();
         }
         System.out.println( "   ____________________________________________________________\n  " +
