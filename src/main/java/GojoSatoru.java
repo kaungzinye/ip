@@ -1,10 +1,11 @@
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class GojoSatoru {
-    public static class Task {
+    public abstract static class Task {
         protected String task;
         protected Boolean completed;
 
@@ -21,17 +22,57 @@ public class GojoSatoru {
             this.completed = false;
         }
 
+        public abstract String showTask();
+    }
+    public class ToDo extends Task {
+        public ToDo(String input) {
+            super(input);
+        }
+        @Override
         public String showTask(){
             String output;
             if(this.completed) {
-                output = "[X] " + task;
+                output = "[T][X] " + task;
             }
             else{
-                output = "[ ] " + task;
+                output = "[T][ ] " + task;
             }
             return output;
         }
     }
+    public class Deadline extends Task {
+        public Deadline(String input) {
+            super(input);
+        }
+        @Override
+        public String showTask(){
+            String output;
+            if(this.completed) {
+                output = "[D][X] " + task;
+            }
+            else{
+                output = "[D][ ] " + task;
+            }
+            return output;
+        }
+    }
+    public class Event extends Task {
+        public Event(String input) {
+            super(input);
+        }
+        @Override
+        public String showTask(){
+            String output;
+            if(this.completed) {
+                output = "[E][X] " + task;
+            }
+            else{
+                output = "[E][ ] " + task;
+            }
+            return output;
+        }
+    }
+
     public static boolean isSecondWordNumberAndInList(String input, int listSize) {
         String[] words = input.split("\\s+");
         if (words.length < 2){
@@ -60,7 +101,28 @@ public class GojoSatoru {
         String[] words = input.split("\\s+");
         return Integer.parseInt(words[1])-1;
     }
-    public static void main(String[] args) {
+
+    public ToDo handleToDos(String input){
+        String[] words = input.split("\\s+");
+        String taskName = String.join(" ", Arrays.copyOfRange(words, 1, words.length));
+        return new ToDo(taskName);
+    }
+
+    public Deadline handleDeadlines(String input){
+        String[] words = input.split("\\s+");
+        String[] taskAndDeadline = String.join(" ", Arrays.copyOfRange(words, 1, words.length)).split("/by ");
+        return new Deadline(taskAndDeadline[0] + "(by: " + taskAndDeadline[1] + ")");
+    }
+
+    public Event handleEvents(String input){
+        String[] words = input.split("\\s+");
+        String[] taskAndFrom = String.join(" ", Arrays.copyOfRange(words, 1, words.length)).split("/from ");
+        String[] fromAndTo = taskAndFrom[1].split("/to ");
+        return new Event(taskAndFrom[0] + "(from: " + fromAndTo[0] + "to: " + fromAndTo[1] + ")");
+    }
+
+    public static void main(String[] args) throws Exception {
+        GojoSatoru gojo = new GojoSatoru();
         String introText = "   ____________________________________________________________\n" +
             "   Hello! I'm Gojo Satoru\n" +
             "   Am I the strongest chatbot because I'm Gojo Satoru\n" +
@@ -96,10 +158,24 @@ public class GojoSatoru {
                     }
             }
             else {
-                Task newTask = new Task(userInput);
+                String typeOfTask = userInput.split("\\s+")[0];
+                Task newTask;
+                if (typeOfTask.equals( "todo") ) {
+                    newTask = gojo.handleToDos(userInput);
+                }
+                else if (typeOfTask.equals("deadline")) {
+                    newTask = gojo.handleDeadlines(userInput);
+                }
+                else if (typeOfTask.equals("event")){
+                    newTask = gojo.handleEvents(userInput);
+                }
+                else {
+                    Exception exception = new Exception("invalid task");
+                    throw exception;
+                }
                 items.add(newTask);
-                System.out.println("   ____________________________________________________________\n   added: " +
-                    userInput + "\n"
+                System.out.println("   ____________________________________________________________\n   Got it. I've added his task:\n      " +
+                    newTask.showTask() + "\n   Now you have " + items.size() + " tasks in the list.\n"
                     + "   ____________________________________________________________\n");
             }
             userInput = userScanner.nextLine();
