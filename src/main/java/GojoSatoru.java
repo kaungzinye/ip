@@ -72,7 +72,8 @@ public class GojoSatoru {
         ArrayList<Task> items = new ArrayList<>();
         while (!Objects.equals(userInput, "bye")){
             if (Objects.equals(userInput, "list")){
-                System.out.println("   ____________________________________________________________\n   ");
+                System.out.println("   ____________________________________________________________\n   " +
+                    "Here are the tasks in your list:   ");
                 for (int i = 0; i < items.size(); i++) {
                     System.out.println("    " + Integer.toString(i + 1) + ". " + items.get(i).showTask());
                 }
@@ -95,8 +96,6 @@ public class GojoSatoru {
                     }
             }
             else {
-                System.out.println((userInput.matches("mark") || userInput.matches("unmark")));
-                System.out.println(isSecondWordNumberAndInList(userInput, items.size()));
                 Task newTask = new Task(userInput);
                 items.add(newTask);
                 System.out.println("   ____________________________________________________________\n   added: " +
