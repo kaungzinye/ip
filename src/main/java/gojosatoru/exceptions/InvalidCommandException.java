@@ -4,7 +4,7 @@ public class InvalidCommandException extends GojoException {
   public InvalidCommandException() {
     super("   ____________________________________________________________\n  " +
         " Oi... I don't know what that means, didn't teach ya that in Jujutsu High..\n" +
-        "   ____________________________________________________________\n");
+        "   ____________________________________________________________");
   }
 
   public InvalidCommandException(String message) {
