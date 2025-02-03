@@ -14,12 +14,20 @@ public abstract class Task {
     this.outputFormatter = outputFormatter;
   }
 
+  public String getTaskDescription() {
+    return taskDescription;
+  }
+
   public void markTask(){
     this.completed = true;
   }
 
   public void unmarkTask() {
     this.completed = false;
+  }
+
+  public Boolean isCompleted() {
+    return completed;
   }
 
   public abstract String showTask();

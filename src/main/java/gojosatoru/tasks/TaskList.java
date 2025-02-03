@@ -32,4 +32,8 @@ public class TaskList {
   public int size() {
     return tasks.size();
   }
+
+  public void clear() {
+    tasks.clear();
+  }
 }
