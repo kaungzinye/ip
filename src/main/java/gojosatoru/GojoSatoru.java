@@ -9,6 +9,7 @@ import main.exceptions.*;
 import main.storage.*;
 import main.tasks.*;
 
+
 public class GojoSatoru {
     private static final String FILE_PATH = "../data/cursedEnergy.txt";
     private static Storage storage;
@@ -139,7 +140,7 @@ public class GojoSatoru {
         String introText = "   ____________________________________________________________\n" +
             "   Hello! I'm Gojo Satoru\n" +
             "   Am I the strongest chatbot because I'm Gojo Satoru\n" +
-            "   or am I the Gojo Statoru because I am the weakest chatbot?\n" +
+            "   or am I Gojo Statoru because I am the strongest chatbot?\n" +
             "   What can I do for you?\n" + "   ____________________________________________________________\n";
         System.out.println(introText);
         while (true){

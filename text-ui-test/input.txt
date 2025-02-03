@@ -1,3 +1,17 @@
 todo Buy groceries
+deadline Project submission /by 12/12/2025 1800
+event Concert /from 10/10/2025 1900 /to 10/10/2025 2200
 list
+mark 1
+unmark 1
+delete 2
+todo
+deadline Submit report
+deadline Submit report /by December 12 2025
+event Birthday Party /to 10/10/2025 2200
+event Birthday Party /from 10/10/2025 1900
+event Birthday Party /from 10-Oct-2025 19:00 /to 10-Oct-2025 22:00
+event Birthday Party /from 10/10/2025 2200 /to 10/10/2025 1900
+mark 10
+destroy world
 bye
