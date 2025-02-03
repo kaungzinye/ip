@@ -1,11 +1,9 @@
-package main.exceptions;
-
-import main.GojoSatoru;
+package gojosatoru.exceptions;
 
 public class InvalidCommandException extends GojoException {
   public InvalidCommandException() {
     super("   ____________________________________________________________\n  " +
-        "Oi... I don't know what that means, didn't teach ya that in Jujutsu High.. \n" +
+        " Oi... I don't know what that means, didn't teach ya that in Jujutsu High..\n" +
         "   ____________________________________________________________\n");
   }
 

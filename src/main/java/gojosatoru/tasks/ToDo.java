@@ -1,8 +1,10 @@
-package main.tasks;
+package gojosatoru.tasks;
+
+import java.time.format.DateTimeFormatter;
 
 public class ToDo extends Task {
-  public ToDo(String input) {
-    super(input);
+  public ToDo(String input, DateTimeFormatter outputFormatter) {
+    super(input, outputFormatter);
   }
   @Override
   public String showTask(){

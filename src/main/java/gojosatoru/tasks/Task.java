@@ -1,14 +1,17 @@
-package main.tasks;
+package gojosatoru.tasks;
 
-import main.GojoSatoru;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Task {
   protected String taskDescription;
   protected Boolean completed;
 
-  public Task(String taskDescription){
+  protected DateTimeFormatter outputFormatter;
+
+  public Task(String taskDescription , DateTimeFormatter outputFormatter) {
     this.taskDescription = taskDescription;
     this.completed = false;
+    this.outputFormatter = outputFormatter;
   }
 
   public void markTask(){

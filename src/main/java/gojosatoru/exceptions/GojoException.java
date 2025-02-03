@@ -1,6 +1,4 @@
-package main.exceptions;
-
-import main.GojoSatoru;
+package gojosatoru.exceptions;
 
 public class GojoException extends Exception {
   // Default constructor
