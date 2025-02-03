@@ -1,6 +1,4 @@
-package main.exceptions;
-
-import main.GojoSatoru;
+package gojosatoru.exceptions;
 
 public class TaskNotFoundException extends GojoException {
   public TaskNotFoundException() {

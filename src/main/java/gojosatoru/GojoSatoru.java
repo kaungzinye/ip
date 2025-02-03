@@ -1,20 +1,28 @@
-package main;
+package gojosatoru;
 
 import java.io.*;
-import java.util.Arrays;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.ArrayList;
-import main.exceptions.*;
-import main.storage.*;
-import main.tasks.*;
+import gojosatoru.exceptions.*;
+import gojosatoru.handlers.TaskHandler;
+import gojosatoru.storage.*;
+import gojosatoru.tasks.*;
+
 
 public class GojoSatoru {
-    private static final String FILE_PATH = "../data/cursedEnergy.txt";
+    private static final String FILE_PATH = "./src/main/data/cursedEnergy.txt";
     private static Storage storage;
 
+    private static String inputDateFormat = "dd/MM/yyyy HHmm";
+    private static String outputDateFormat = "MMM dd yyyy HHmm";
+    private static DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(inputDateFormat);
+    private static DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputDateFormat);
+    private static TaskHandler taskHandler = new TaskHandler(inputFormatter, outputFormatter, inputDateFormat);
+
     public GojoSatoru() {
-        storage = new Storage(FILE_PATH);
+        storage = new Storage(FILE_PATH, taskHandler, inputFormatter, outputFormatter);
     }
 
     public static boolean isSecondWordNumberAndInList(String input, int listSize) {
@@ -42,17 +50,17 @@ public class GojoSatoru {
                     pickedTask.markTask();
                     storage.markTask(index, items);
                     System.out.println("   ____________________________________________________________\n   " +
-                        "Nice! I've marked this task as done: \n   " +
+                        "Nice! I've marked this task as done:\n     " +
                         pickedTask.showTask() + "\n   ____________________________________________________________\n");
                 } else if (isUnmark(userInput)) {
                     pickedTask.unmarkTask();
                     storage.unmarkTask(index, items);
                     System.out.println("   ____________________________________________________________\n   " +
-                        "OK, I've marked this task as not done yet: \n   " +
+                        "OK, I've marked this task as not done yet:\n     " +
                         pickedTask.showTask() + "\n   ____________________________________________________________\n");
                 } else {
                     System.out.println("   ____________________________________________________________\n   " +
-                        "OK, I'm deleting this task: \n   " +
+                        "OK, I'm deleting this task:\n     " +
                         pickedTask.showTask() + "\n   ____________________________________________________________\n");
                     storage.deleteTask(index, items);
                 }
@@ -89,49 +97,6 @@ public class GojoSatoru {
         return Integer.parseInt(words[1])-1;
     }
 
-    public ToDo handleToDos(String input) throws MissingArgumentException{
-        String[] words = input.split("\\s+");
-        if (words.length < 2 || words[1].trim().isEmpty()) {
-            throw new MissingArgumentException();
-        }
-        String taskName = String.join(" ", Arrays.copyOfRange(words, 1, words.length));
-        return new ToDo(taskName);
-    }
-
-    public Deadline handleDeadlines(String input) throws MissingArgumentException {
-        String[] parts = input.split("/by ");
-        if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new MissingArgumentException("   ____________________________________________________________\n  " +
-                "You either got no /by or name for your deadline.. I don't know when your thing ends, a sorcerer should always chant when they cast their spell.\n" +
-                "   ____________________________________________________________\n");
-        }
-        String description = parts[0].replace("deadline ", "").trim() + " (by: " + parts[1].trim() + ")";
-        String by = parts[1].trim();
-        return new Deadline(description, by);
-    }
-
-
-    public Event handleEvents(String input) throws MissingArgumentException {
-        String[] parts = input.split("/from ");
-        if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new MissingArgumentException("   ____________________________________________________________\n  " +
-                "Where's your /from (start date)? Can't have an event without the start time, just like how Purple needs Blue.\n" +
-                "   ____________________________________________________________\n");
-        }
-        String[] fromAndTo = parts[1].split("/to ");
-        if (fromAndTo.length < 2 || fromAndTo[1].trim().isEmpty()) {
-            throw new MissingArgumentException("   ____________________________________________________________\n  " +
-                "Where's your /to (end date)? Can't have an event without the ending time, just like how Purple needs red.\n" +
-                "   ____________________________________________________________\n");
-        }
-        String description = parts[0].replace("event ", "").trim()
-            + " (from: " + fromAndTo[0].trim() + " to: "
-            + fromAndTo[1].trim() + ")";
-        String from = fromAndTo[0].trim();
-        String to = fromAndTo[1].trim();
-        return new Event(description, from, to);
-    }
-
     public static void main(String[] args) throws Exception {
         GojoSatoru gojo = new GojoSatoru();
         ArrayList<Task> items = storage.load();
@@ -139,7 +104,7 @@ public class GojoSatoru {
         String introText = "   ____________________________________________________________\n" +
             "   Hello! I'm Gojo Satoru\n" +
             "   Am I the strongest chatbot because I'm Gojo Satoru\n" +
-            "   or am I the Gojo Statoru because I am the weakest chatbot?\n" +
+            "   or am I Gojo Statoru because I am the strongest chatbot?\n" +
             "   What can I do for you?\n" + "   ____________________________________________________________\n";
         System.out.println(introText);
         while (true){
@@ -152,7 +117,7 @@ public class GojoSatoru {
             }
             else if (Objects.equals(userInput, "list")){
                 System.out.println("   ____________________________________________________________\n   " +
-                    "Here are the tasks in your list:   ");
+                    "Here are the tasks in your list:");
                 for (int i = 0; i < items.size(); i++) {
                     System.out.println("    " + Integer.toString(i + 1) + ". " + items.get(i).showTask());
                 }
@@ -175,13 +140,13 @@ public class GojoSatoru {
                     Task newTask;
                     switch (typeOfTask) {
                         case "todo":
-                            newTask = gojo.handleToDos(userInput);
+                            newTask = taskHandler.handleToDos(userInput);
                             break;
                         case "deadline":
-                            newTask = gojo.handleDeadlines(userInput);
+                            newTask = taskHandler.handleDeadlines(userInput);
                             break;
                         case "event":
-                            newTask = gojo.handleEvents(userInput);
+                            newTask = taskHandler.handleEvents(userInput);
                             break;
                         default:
                             throw new InvalidCommandException();
@@ -189,7 +154,7 @@ public class GojoSatoru {
 
                     items.add(newTask);
                     storage.addTask(newTask);
-                    System.out.println("   ____________________________________________________________\n   Got it. I've added his task:\n      " +
+                    System.out.println("   ____________________________________________________________\n   Got it. I've added this task:\n      " +
                         newTask.showTask() + "\n   Now you have " + items.size() + " tasks in the list.\n"
                         + "   ____________________________________________________________\n");
                 } catch (GojoException e) {

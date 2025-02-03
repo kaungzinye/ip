@@ -1,21 +1,89 @@
    ____________________________________________________________
    Hello! I'm Gojo Satoru
    Am I the strongest chatbot because I'm Gojo Satoru
-   or am I the Gojo Statoru because I am the weakest chatbot?
+   or am I Gojo Statoru because I am the strongest chatbot?
    What can I do for you?
    ____________________________________________________________
 
    ____________________________________________________________
    Got it. I've added this task:
       [T][ ] Buy groceries
-   Now you have 1 task in the list.
+   Now you have 1 tasks in the list.
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Got it. I've added this task:
+      [D][ ] Project submission (by: Dec 12 2025 1800)
+   Now you have 2 tasks in the list.
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Got it. I've added this task:
+      [E][ ] Concert (from: Oct 10 2025 1900 to: Oct 10 2025 2200)
+   Now you have 3 tasks in the list.
    ____________________________________________________________
 
    ____________________________________________________________
    Here are the tasks in your list:
     1. [T][ ] Buy groceries
+    2. [D][ ] Project submission (by: Dec 12 2025 1800)
+    3. [E][ ] Concert (from: Oct 10 2025 1900 to: Oct 10 2025 2200)
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Nice! I've marked this task as done:
+     [T][X] Buy groceries
+   ____________________________________________________________
+
+   ____________________________________________________________
+   OK, I've marked this task as not done yet:
+     [T][ ] Buy groceries
+   ____________________________________________________________
+
+   ____________________________________________________________
+   OK, I'm deleting this task:
+     [D][ ] Project submission (by: Dec 12 2025 1800)
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Even with my Six Eyes, I can't tell what the name of your task is... BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!
+   ____________________________________________________________
+
+   ____________________________________________________________
+   You either got no /by or name for your deadline.. I don't know when your thing ends, a sorcerer should always chant when they cast their spell.
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Your formatting for the date of deadline is wrong or your date is invalid. It should be dd/MM/yyyy HHmm. Try again..
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Where's your /from (start date)? Can't have an event without the start time, just like how Purple needs Blue.
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Where's your /to (end date)? Can't have an event without the ending time, just like how Purple needs red.
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Your formatting and/or the timings of the event is wrong. It should be dd/MM/yyyy HHmm. Try again..
+   ____________________________________________________________
+
+   ____________________________________________________________
+   The start date/time must be before the end date/time. Please provide valid timings.
+   ____________________________________________________________
+
+   ____________________________________________________________
+   My Six Eyes I can't find your task, because you it doesn't exist you idiot.
+   Not surprised since I'm stronger than you..
+   Try again...
+   ____________________________________________________________
+
+   ____________________________________________________________
+   Oi... I don't know what that means, didn't teach ya that in Jujutsu High..
    ____________________________________________________________
 
    ____________________________________________________________
    You're weak... the next time I see you, I'd win.
    ____________________________________________________________
+
