@@ -20,8 +20,8 @@ public class Storage {
     this.outputFormatter = outputFormatter;
   }
 
-  public ArrayList<Task> load() throws IOException {
-    ArrayList<Task> tasks = new ArrayList<>();
+  public TaskList load() throws IOException {
+    TaskList taskList = new TaskList();
     File file = new File(FILEPATH);
     if (!file.exists()) {
       file.getParentFile().mkdirs();
@@ -52,7 +52,7 @@ public class Storage {
           if (taskDetails[1].equals("1")) {
             task.markTask();
           }
-          tasks.add(task);
+          taskList.addTask(task);
         } catch (Exception e) {
           System.out.println("   ____________________________________________________________\n  " +
               "There was an error loading the task: " + line + "\n" +
@@ -61,12 +61,12 @@ public class Storage {
       }
       reader.close();
     }
-      return tasks;
+      return taskList;
   }
 
-  public void save(ArrayList<Task> tasks) throws IOException {
+  public void save(TaskList taskList) throws IOException {
     BufferedWriter writer = new BufferedWriter(new FileWriter(FILEPATH));
-    for (Task task : tasks) {
+    for (Task task : taskList.getTasks()) {
       writer.write(task.toSaveFormat() + "\n");
     }
     writer.close();
@@ -78,19 +78,19 @@ public class Storage {
     writer.close();
   }
 
-  public void deleteTask(int index, ArrayList<Task> tasks) throws IOException {
-    tasks.remove(index);
-    save(tasks);
+  public void deleteTask(int index, TaskList taskList) throws IOException {
+    taskList.deleteTask(index);
+    save(taskList);
   }
 
-  public void markTask(int index, ArrayList<Task> tasks) throws IOException {
-    tasks.get(index).markTask();
-    save(tasks);
+  public void markTask(int index, TaskList taskList) throws IOException {
+    taskList.getTask(index).markTask();
+    save(taskList);
   }
 
-  public void unmarkTask(int index, ArrayList<Task> tasks) throws IOException {
-    tasks.get(index).unmarkTask();
-    save(tasks);
+  public void unmarkTask(int index, TaskList taskList) throws IOException {
+    taskList.getTask(index).unmarkTask();
+    save(taskList);
   }
 
 }
