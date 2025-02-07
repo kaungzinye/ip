@@ -1,15 +1,13 @@
 package gojosatoru;
 
-import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.ArrayList;
+
 import gojosatoru.exceptions.*;
-import gojosatoru.handlers.TaskHandler;
+import gojosatoru.command.Command;
 import gojosatoru.parser.Parser;
 import gojosatoru.storage.*;
-import gojosatoru.tasks.Task;
 import gojosatoru.tasks.TaskList;
 import gojosatoru.ui.Ui;
 
@@ -22,11 +20,12 @@ public class GojoSatoru {
     private static String outputDateFormat = "MMM dd yyyy HHmm";
     private static DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(inputDateFormat);
     private static DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputDateFormat);
-    private static TaskHandler taskHandler = new TaskHandler(inputFormatter, outputFormatter, inputDateFormat);
-    private static Storage storage = new Storage(FILE_PATH, taskHandler, inputFormatter, outputFormatter);
-    private static Parser parser = new Parser(taskHandler, storage, UI);
+    private static Command command = new Command(inputFormatter, outputFormatter, inputDateFormat, UI);
+    private static Storage storage = new Storage(FILE_PATH, inputFormatter, outputFormatter);
+    private static Parser parser = new Parser(command);
 
     public static void main(String[] args) throws Exception {
+        command.setStorage(storage);
         TaskList taskList = storage.load();
         Scanner userScanner = new Scanner(System.in);
         UI.showWelcome();

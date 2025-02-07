@@ -1,5 +1,8 @@
 package gojosatoru.ui;
 
+import gojosatoru.tasks.Task;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class Ui {
@@ -67,5 +70,13 @@ public class Ui {
   }
   public void showTaskInList(int index, String task) {
     System.out.println("    " + (index + 1) + ". " + task);
+  }
+  public void showMatchingTasks(List<Task> matchingTasks) {
+    System.out.println("   ____________________________________________________________");
+    System.out.println("   Here are the matching tasks in your list:");
+    for (int i = 0; i < matchingTasks.size(); i++) {
+      System.out.println("   " + (i + 1) + "." + matchingTasks.get(i).showTask());
+    }
+    System.out.println("   ____________________________________________________________");
   }
 }
