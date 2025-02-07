@@ -1,6 +1,9 @@
 package gojosatoru.ui;
 
+import java.util.List;
 import java.util.Scanner;
+
+import gojosatoru.tasks.Task;
 
 /**
  * Handles user interactions.
@@ -97,7 +100,6 @@ public class Ui {
             + size + " tasks in the list.");
         showLine();
     }
-
     /**
      * Displays a storage error message.
      */
@@ -133,5 +135,18 @@ public class Ui {
      */
     public void showTaskInList(int index, String task) {
         System.out.println("    " + (index + 1) + ". " + task);
+    }
+    /**
+     * Displays the list of tasks that match the search keyword.
+     *
+     * @param matchingTasks the list of tasks that match the search keyword
+     */
+    public void showMatchingTasks(List<Task> matchingTasks) {
+        System.out.println("   ____________________________________________________________");
+        System.out.println("   Here are the matching tasks in your list:");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println("   " + (i + 1) + "." + matchingTasks.get(i).showTask());
+        }
+        System.out.println("   ____________________________________________________________");
     }
 }

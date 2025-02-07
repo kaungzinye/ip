@@ -51,21 +51,25 @@ public class TaskList {
         tasks.remove(index);
     }
 
-    /**
-     * Gets a task from the list by index.
-     *
-     * @param index the index of the task to get
-     * @return the task at the specified index
-     */
     public Task getTask(int index) {
         return tasks.get(index);
     }
-
     /**
-     * Gets the number of tasks in the list.
+     * Finds tasks that contain the specified keyword in their description.
      *
-     * @return the number of tasks
+     * @param keyword the keyword to search for in the task descriptions
+     * @return a list of tasks that match the keyword
      */
+    public ArrayList<Task> findTasks(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.showTask().contains(keyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
+    }
+
     public int size() {
         return tasks.size();
     }

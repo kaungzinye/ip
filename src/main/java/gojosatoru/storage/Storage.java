@@ -1,4 +1,5 @@
 package gojosatoru.storage;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,7 +9,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import gojosatoru.handlers.TaskHandler;
+import gojosatoru.command.Command;
 import gojosatoru.tasks.Task;
 import gojosatoru.tasks.TaskList;
 
@@ -17,22 +18,22 @@ import gojosatoru.tasks.TaskList;
  */
 public class Storage {
     private final String filePath;
-    private TaskHandler taskHandler;
-    private DateTimeFormatter inputFormatter;
-    private DateTimeFormatter outputFormatter;
+    private Command command;
+    private final DateTimeFormatter inputFormatter;
+    private final DateTimeFormatter outputFormatter;
 
     /**
      * Constructs a Storage object with the specified file path, task handler, input formatter, and output formatter.
      *
      * @param filePath        the path of the file to store tasks
-     * @param taskHandler     the handler for task operations
+     * @param command         the command handler to use for task operations
      * @param inputFormatter  the formatter for parsing input dates
      * @param outputFormatter the formatter for formatting output dates
      */
-    public Storage(String filePath, TaskHandler taskHandler,
-                   DateTimeFormatter inputFormatter, DateTimeFormatter outputFormatter) {
-        this.taskHandler = taskHandler;
+    public Storage(String filePath, Command command, DateTimeFormatter inputFormatter,
+                   DateTimeFormatter outputFormatter) {
         this.filePath = filePath;
+        this.command = command;
         this.inputFormatter = inputFormatter;
         this.outputFormatter = outputFormatter;
     }
@@ -58,16 +59,16 @@ public class Storage {
                 try {
                     switch (taskDetails[0]) {
                     case "T":
-                        task = taskHandler.handleToDos("todo " + taskDetails[2]);
+                        task = command.handleToDos("todo " + taskDetails[2]);
                         break;
                     case "D":
                         String by = LocalDateTime.parse(taskDetails[3], outputFormatter).format(inputFormatter);
-                        task = taskHandler.handleDeadlines("deadline " + taskDetails[2] + " /by " + by);
+                        task = command.handleDeadlines("deadline " + taskDetails[2] + " /by " + by);
                         break;
                     case "E":
                         String from = LocalDateTime.parse(taskDetails[3], outputFormatter).format(inputFormatter);
                         String to = LocalDateTime.parse(taskDetails[4], outputFormatter).format(inputFormatter);
-                        task = taskHandler.handleEvents("event " + taskDetails[2] + " /from " + from + " /to " + to);
+                        task = command.handleEvents("event " + taskDetails[2] + " /from " + from + " /to " + to);
                         break;
                     default:
                         throw new IOException("Corrupted data file.");
