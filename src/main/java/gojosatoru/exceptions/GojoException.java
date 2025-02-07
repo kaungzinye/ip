@@ -1,17 +1,23 @@
 package gojosatoru.exceptions;
 
-import gojosatoru.ui.Ui;
-
+/**
+ * Represents a generic exception in the Gojo application.
+ */
 public class GojoException extends Exception {
-  private static final Ui UI = new Ui();
-  // Default constructor
+
+  /**
+   * Constructs a GojoException with a default error message.
+   */
   public GojoException() {
     super("An error occurred in Gojo.");
   }
 
-  // Constructor with a custom error message
+  /**
+   * Constructs a GojoException with a custom error message.
+   *
+   * @param message the custom error message
+   */
   public GojoException(String message) {
     super(message);
   }
 }
-
