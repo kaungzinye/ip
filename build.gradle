@@ -3,20 +3,11 @@ plugins {
     id 'application'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'checkstyle'
-    id 'com.diffplug.spotless' version '6.0.4'
 }
 
 checkstyle {
     toolVersion = '10.2'
     configFile = file('config/checkstyle/checkstyle.xml')
-    dependsOn 'spotlessApply'
-}
-
-spotless {
-    java {
-        checkstyle('config/checkstyle/checkstyle.xml')
-        target 'src/**/*.java'
-    }
 }
 
 tasks.withType(Checkstyle) {
@@ -48,12 +39,13 @@ test {
         showStandardStreams = false
     }
 }
+
 tasks.build {
     dependsOn 'checkstyle'
 }
 
 application {
-    mainClass.set("seedu.gojosatoru,GojoSatoru")
+    mainClass.set("seedu.gojosatoru.GojoSatoru")
 }
 
 shadowJar {
@@ -62,6 +54,6 @@ shadowJar {
     archiveClassifier = null
 }
 
-run{
+run {
     standardInput = System.in
 }
