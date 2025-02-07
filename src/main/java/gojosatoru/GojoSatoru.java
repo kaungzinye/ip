@@ -1,15 +1,14 @@
 package gojosatoru;
 
-import java.io.*;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.ArrayList;
-import gojosatoru.exceptions.*;
+
+import gojosatoru.exceptions.GojoException;
 import gojosatoru.handlers.TaskHandler;
 import gojosatoru.parser.Parser;
-import gojosatoru.storage.*;
-import gojosatoru.tasks.Task;
+import gojosatoru.storage.Storage;
 import gojosatoru.tasks.TaskList;
 import gojosatoru.ui.Ui;
 
@@ -30,7 +29,7 @@ public class GojoSatoru {
         TaskList taskList = storage.load();
         Scanner userScanner = new Scanner(System.in);
         UI.showWelcome();
-        while (true){
+        while (true) {
             String userInput = userScanner.nextLine();
             try {
                 parser.parseCommand(userInput, taskList);
