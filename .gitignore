@@ -16,3 +16,5 @@ bin/
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
 src/main/data/cursedEnergy.txt
+# Ignore JAR files in build/libs
+/build/libs/*.jar

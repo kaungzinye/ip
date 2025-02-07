@@ -137,7 +137,6 @@ class MainTest {
     taskList = storage.load();
     assertEquals(0, taskList.size());
   }
-
   @Test
   void testInvalidEvent() throws Exception {
     String input = "event Birthday Party /to 10/10/2025 2200\nbye";
