@@ -31,7 +31,7 @@ public class Event extends Task {
      */
     @Override
     public String showTask() {
-        return (completed ? "[D][X] " : "[D][ ] ") + " (from: "
+        return (completed ? "[E][X] " : "[E][ ] ") + " (from: "
             + outputFormatter.format(from) + " to: " + outputFormatter.format(to) + ")";
     }
 

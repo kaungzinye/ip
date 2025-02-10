@@ -45,12 +45,11 @@ public class Parser {
      * @param taskList the list of tasks to operate on
      * @throws GojoException if the command is invalid or an error occurs during execution
      */
-    public void parseCommand(String userInput, TaskList taskList) throws GojoException {
+    public String parseCommand(String userInput, TaskList taskList) throws GojoException {
         String commandKey = userInput.split("\\s+")[0];
         CommandHandler handler = commandHandlers.get(commandKey);
-        System.out.println("parse is called");
         if (handler != null) {
-            handler.handle(userInput, taskList);
+            return handler.handle(userInput, taskList);
         } else {
             throw new InvalidCommandException();
         }
