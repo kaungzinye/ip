@@ -4,14 +4,18 @@ package gojosatoru.exceptions;
  * Represents an exception thrown when a required argument is missing.
  */
 public class MissingArgumentException extends GojoException {
+    private static final String DEFAULT_MESSAGE = "   ____________________________________________________________\n  "
+        + " Even with my Six Eyes, I can't tell what the name of your task is... "
+        + "BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!\n"
+        + "   ____________________________________________________________";
+    private final String guiMessage;
     /**
      * Constructs a MissingArgumentException with a default error message.
      */
     public MissingArgumentException() {
-        super("   ____________________________________________________________\n  "
-            + " Even with my Six Eyes, I can't tell what the name of your task is... "
-            + "BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!\n"
-            + "   ____________________________________________________________");
+        super(DEFAULT_MESSAGE);
+        this.guiMessage = "Even with my Six Eyes, I can't tell what the name of your task is... "
+            + "BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!";
     }
 
     /**
@@ -21,6 +25,15 @@ public class MissingArgumentException extends GojoException {
      */
     public MissingArgumentException(String message) {
         super(message);
+        this.guiMessage = message;
+    }
+
+    /**
+     * Returns the error message without the lines for GUI display.
+     *
+     * @return the error message without the lines
+     */
+    public String getMessageForGui() {
+        return this.guiMessage;
     }
 }
-

@@ -81,26 +81,27 @@ public class Command {
      * @throws MissingArgumentException if the task description or deadline is missing
      */
     public Deadline handleDeadlines(String input) throws MissingArgumentException {
-        String[] parts = input.split("/by ");
+        String[] parts = input.split("/by ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new MissingArgumentException("   ____________________________________________________________\n  "
-                + " You either got no /by or name for your deadline.. I don't know when your thing ends, a sorcerer "
-                + "should always chant when they cast their spell.\n"
-                + "   ____________________________________________________________");
+            throw new MissingArgumentException(uiObject.showError("The date provided is invalid or incorrectly "
+                + "formatted. Please check and try again.", true));
+//            throw new MissingArgumentException(uiObject.showError("You either got no /by or name for your deadline.. "
+//                + "I don't know when your thing ends, a sorcerer should always chant when they cast their spell.",
+//                true));
         }
         try {
             LocalDateTime deadlineBy = LocalDateTime.parse(parts[1].trim(), inputFormatter);
             String description = parts[0].replace("deadline ", "").trim();
+            if (description.isEmpty()) {
+                throw new MissingArgumentException(uiObject.showError("Your by date is empty!",
+                    true));
+            }
             return new Deadline(description, outputFormatter, deadlineBy);
         } catch (DateTimeParseException e) {
-            throw new MissingArgumentException("   ____________________________________________________________\n   "
-                + "Your formatting for the date of deadline is wrong or your date is invalid. "
-                + "It should be "
-                + dateFormat + ". Try again..\n"
-                + "   ____________________________________________________________");
+            throw new MissingArgumentException(uiObject.showError("Your formatting for the date of deadline is wrong "
+                + "or your date is invalid. It should be " + dateFormat + ". Try again..", true));
         }
     }
-
     /**
      * Handles the creation of an Event task.
      *
@@ -110,37 +111,34 @@ public class Command {
      * @throws InvalidDateException if the start time is not before the end time
      */
     public Event handleEvents(String input) throws MissingArgumentException, InvalidDateException {
-        String[] parts = input.split("/from ");
+        // Ensure splitting only occurs at the first "/from "
+        String[] parts = input.split(" /from ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new MissingArgumentException("   ____________________________________________________________\n  "
-                + " Where's your /from (start date)? Can't have an event without the start time, just like how Purple"
-                + " needs Blue.\n"
-                + "   ____________________________________________________________");
+            throw new MissingArgumentException(uiObject.showError(
+                "The event must have a start and end time. Please check the format: /from <start time> /to <end time>", true));
         }
-        String[] fromAndTo = parts[1].split("/to ");
-        if (fromAndTo.length < 2 || fromAndTo[1].trim().isEmpty()) {
-            throw new MissingArgumentException("   ____________________________________________________________\n  "
-                + " Where's your /to (end date)? Can't have an event without the ending time, just like how Purple "
-                + "needs red.\n"
-                + "   ____________________________________________________________");
+
+        // Ensure splitting only occurs at the first "/to "
+        String[] fromAndTo = parts[1].split(" /to ", 2);
+        if (fromAndTo.length < 2 || fromAndTo[0].trim().isEmpty()) {
+            throw new MissingArgumentException(uiObject.showError(
+                "The event must have a start and end time. Please check the format: /from <start time> /to <end time>", true));
         }
+        if (fromAndTo[1].trim().isEmpty()) {
+            throw new MissingArgumentException(uiObject.showError(
+                "The event must have a start and end time. Please check the format: /from <start time> /to <end time>", true));
+        }
+
         try {
             LocalDateTime from = LocalDateTime.parse(fromAndTo[0].trim(), inputFormatter);
             LocalDateTime to = LocalDateTime.parse(fromAndTo[1].trim(), inputFormatter);
-            String description = parts[0].replace("event ", "").trim();
-            if (!from.isBefore(to)) {
-                throw new InvalidDateException("   ____________________________________________________________\n   "
-                    + "The start date/time must be before the end date/time. Please provide valid timings.\n"
-                    + "   ____________________________________________________________");
-            }
-            return new Event(description, outputFormatter, from, to);
+            return new Event(parts[0].replace("event ", "").trim(), outputFormatter, from, to);
         } catch (DateTimeParseException e) {
-            throw new MissingArgumentException("   ____________________________________________________________\n   "
-                + "Your formatting and/or the timings of the event is wrong. It should be " + dateFormat + ". Try "
-                + "again..\n"
-                + "   ____________________________________________________________");
+            throw new MissingArgumentException(uiObject.showError("Your formatting and/or the "
+                + "timings of the event is wrong. It should be " + dateFormat + ". Try again..", true));
         }
     }
+
 
     /**
      * Handles marking a task as completed.
@@ -148,9 +146,10 @@ public class Command {
      *
      * @param userInput the user input
      * @param taskList the list of tasks
+     * @return the task marked as completed
      * @throws TaskNotFoundException if the task does not exist
      */
-    public void handleMark(String userInput, TaskList taskList) throws TaskNotFoundException {
+    public String handleMark(String userInput, TaskList taskList) throws TaskNotFoundException {
         int index = getIndex(userInput);
         if (index < 0 || index >= taskList.size()) {
             throw new TaskNotFoundException();
@@ -159,9 +158,9 @@ public class Command {
         try {
             pickedTask.markTask();
             storage.markTask(index, taskList);
-            uiObject.showTaskMarked(pickedTask.showTask());
+            return uiObject.showTaskMarked(pickedTask.showTask());
         } catch (IOException e) {
-            uiObject.showStorageError();
+            return uiObject.showStorageError();
         }
     }
 
@@ -171,18 +170,18 @@ public class Command {
      *
      * @param userInput the user input
      * @param taskList the list of tasks
+     * @return the list of matching tasks
      */
-    public void handleFind(String userInput, TaskList taskList) {
+    public String handleFind(String userInput, TaskList taskList) {
         String keyword = userInput.substring(5).trim();
         if (keyword.isEmpty()) {
-            uiObject.showError("The keyword for the find command cannot be empty.");
-            return;
+            return uiObject.showError("The keyword for the find command cannot be empty.", true);
         }
         List<Task> matchingTasks = taskList.findTasks(keyword);
         if (matchingTasks.isEmpty()) {
-            uiObject.showError("No matching tasks found.");
+            return uiObject.showError("No matching tasks found.", true);
         } else {
-            uiObject.showMatchingTasks(matchingTasks);
+            return uiObject.showMatchingTasks(matchingTasks);
         }
     }
 
@@ -190,15 +189,11 @@ public class Command {
      * Handles listing all tasks.
      * Displays the task list header and each task in the list.
      *
-     * @param userInput the user input
      * @param taskList the list of tasks
+     * @return the list of tasks
      */
-    public void handleList(String userInput, TaskList taskList) {
-        uiObject.showTaskListHeader();
-        for (int i = 0; i < taskList.size(); i++) {
-            uiObject.showTaskInList(i, taskList.getTask(i).showTask());
-        }
-        uiObject.showLine();
+    public String handleList(String userInput, TaskList taskList) {
+        return uiObject.showTasksInList(taskList);
     }
 
     /**
@@ -207,9 +202,10 @@ public class Command {
      *
      * @param userInput the user input
      * @param taskList the list of tasks
+     * @return the task marked as not completed
      * @throws TaskNotFoundException if the task does not exist
      */
-    public void handleUnmark(String userInput, TaskList taskList) throws TaskNotFoundException {
+    public String handleUnmark(String userInput, TaskList taskList) throws TaskNotFoundException {
         int index = getIndex(userInput);
         if (index < 0 || index >= taskList.size()) {
             throw new TaskNotFoundException();
@@ -218,9 +214,9 @@ public class Command {
         try {
             pickedTask.unmarkTask();
             storage.unmarkTask(index, taskList);
-            uiObject.showTaskUnmarked(pickedTask.showTask());
+            return uiObject.showTaskUnmarked(pickedTask.showTask());
         } catch (IOException e) {
-            uiObject.showStorageError();
+            return uiObject.showStorageError();
         }
     }
 
@@ -231,8 +227,8 @@ public class Command {
      * @param userInput the user input
      * @param taskList the list of tasks
      */
-    public void handleBye(String userInput, TaskList taskList) {
-        uiObject.showBye();
+    public String handleBye(String userInput, TaskList taskList) {
+        return uiObject.showBye();
     }
 
     /**
@@ -241,19 +237,20 @@ public class Command {
      *
      * @param userInput the user input
      * @param taskList the list of tasks
+     * @return the task deleted
      * @throws TaskNotFoundException if the task does not exist
      */
-    public void handleDelete(String userInput, TaskList taskList) throws TaskNotFoundException {
+    public String handleDelete(String userInput, TaskList taskList) throws TaskNotFoundException {
         int index = getIndex(userInput);
         if (index < 0 || index >= taskList.size()) {
             throw new TaskNotFoundException();
         }
         Task pickedTask = taskList.getTask(index);
         try {
-            uiObject.showTaskDeleted(pickedTask.showTask());
             storage.deleteTask(index, taskList);
+            return uiObject.showTaskDeleted(pickedTask.showTask());
         } catch (IOException e) {
-            uiObject.showStorageError();
+            return uiObject.showStorageError();
         }
     }
 
@@ -263,10 +260,11 @@ public class Command {
      *
      * @param userInput the user input
      * @param taskList the list of tasks
+     * @return the task added
      * @throws GojoException if the task type is invalid or arguments are missing
      */
-    public void handleAddTask(String userInput, TaskList taskList) throws GojoException {
-        String[] words = userInput.split("\\s+");
+    public String handleAddTask(String userInput, TaskList taskList) throws GojoException {
+        String[] words = userInput.split("\\s+", 2);
         String typeOfTask = words[0];
         if (words.length < 2 || words[1].trim().isEmpty()) {
             throw new MissingArgumentException();
@@ -292,6 +290,6 @@ public class Command {
         } catch (IOException e) {
             uiObject.showStorageError();
         }
-        uiObject.showTaskAdded(newTask.showTask(), taskList.size());
+        return uiObject.showTaskAdded(newTask.showTask(), taskList.size());
     }
 }

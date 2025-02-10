@@ -1,12 +1,13 @@
 package gojosatoru;
 
-
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Scanner;
 
 import gojosatoru.command.Command;
 import gojosatoru.exceptions.GojoException;
+import gojosatoru.exceptions.InvalidCommandException;
 import gojosatoru.parser.Parser;
 import gojosatoru.storage.Storage;
 import gojosatoru.tasks.TaskList;
@@ -15,14 +16,14 @@ import gojosatoru.ui.Ui;
 /**
  * The `GojoSatoru` class is the main entry point for the application.
  * It initializes the necessary components and handles user input.
- *
+ * <p>
  * The class uses the following components:
  * - `Command` to handle various commands.
  * - `Storage` to load and save tasks.
  * - `Parser` to parse user input.
  * - `TaskList` to manage the list of tasks.
  * - `Ui` to handle user interactions.
- *
+ * <p>
  * The main method runs an infinite loop to continuously accept user input
  * until the "bye" command is given.
  */
@@ -38,20 +39,47 @@ public class GojoSatoru {
     private static Storage storage = new Storage(FILE_PATH, command, inputFormatter, outputFormatter);
     private static Parser parser = new Parser(command);
 
+    private static TaskList taskList;
+
+    static {
+        try {
+            command.setStorage(storage);
+            taskList = storage.load();
+        } catch (IOException e) {
+            UI.showStorageError();
+        }
+    }
+
+    /**
+     * Gets the response from the parser.
+     *
+     * @param input the user input
+     * @return the response from the parser
+     * @throws GojoException if an error occurs during parsing
+     */
+    public static String getResponse(String input) throws GojoException {
+        try {
+            return parser.parseCommand(input, taskList);
+        } catch (GojoException e) {
+            return e.getMessageForGui();
+        }
+    }
+    /*
+        * The main entry point for the application.
+        * Waits for user input through the console and/or gui and displays the response.
+     */
     public static void main(String[] args) throws Exception {
-        command.setStorage(storage);
-        TaskList taskList = storage.load();
         Scanner userScanner = new Scanner(System.in);
         UI.showWelcome();
         while (true) {
             String userInput = userScanner.nextLine();
             try {
-                parser.parseCommand(userInput, taskList);
+                getResponse(userInput);
                 if (Objects.equals(userInput, "bye")) {
                     break;
                 }
             } catch (GojoException e) {
-                UI.showError(e.getMessage());
+                UI.showError(e.getMessage(), false);
             }
         }
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import gojosatoru.tasks.Task;
+import gojosatoru.tasks.TaskList;
 
 /**
  * Handles user interactions.
@@ -29,63 +30,81 @@ public class Ui {
 
     /**
      * Displays the welcome message.
+     * @return the welcome message.
      */
-    public void showWelcome() {
+    public String showWelcome() {
         System.out.println("   ____________________________________________________________");
         System.out.println("   Hello! I'm Gojo Satoru");
         System.out.println("   Am I the strongest chatbot because I'm Gojo Satoru");
         System.out.println("   or am I Gojo Satoru because I am the strongest chatbot?");
         System.out.println("   What can I do for you?");
         System.out.println("   ____________________________________________________________");
+        return "Hello! I'm Gojo Satoru\n   Am I the strongest chatbot because I'm Gojo Satoru\n   "
+            + "or am I Gojo Satoru because I am the strongest chatbot?\n   What can I do for you?\n   ";
     }
 
     /**
      * Displays a line separator.
+     * @return a line separator.
      */
-    public void showLine() {
-        System.out.println("   ____________________________________________________________");
+    public String showLine() {
+        String line = "   ____________________________________________________________";
+        System.out.println(line);
+        return line;
     }
 
     /**
      * Displays the goodbye message.
+     * @return the goodbye message.
      */
-    public void showBye() {
+    public String showBye() {
+        String goodbyeMessage = "You're weak... the next time I see you, I'd win.";
         showLine();
-        System.out.println("   You're weak... the next time I see you, I'd win.");
+        System.out.println("   " + goodbyeMessage);
         showLine();
+        return goodbyeMessage;
     }
 
     /**
      * Displays a message indicating a task has been marked as done.
      *
      * @param task the task that was marked as done
+     * @return a message indicating a task has been marked as done
      */
-    public void showTaskMarked(String task) {
+    public String showTaskMarked(String task) {
+        String markedTaskMessage = "Nice! I've marked this task as done:\n     " + task;
         System.out.println("   ____________________________________________________________\n   "
-            + "Nice! I've marked this task as done:\n     " + task + "\n   "
+            + markedTaskMessage + "\n   "
             + "____________________________________________________________");
+        return markedTaskMessage;
     }
 
     /**
      * Displays a message indicating a task has been marked as not done.
      *
      * @param task the task that was marked as not done
+     * @return a message indicating a task has been marked as not done
      */
-    public void showTaskUnmarked(String task) {
+    public String showTaskUnmarked(String task) {
+        String unmarkedTask = "OK, I've marked this task as not done yet:\n     " + task;
         System.out.println("   ____________________________________________________________\n   "
-            + "OK, I've marked this task as not done yet:\n     " + task + "\n   "
+            + unmarkedTask + "\n   "
             + "____________________________________________________________");
+        return unmarkedTask;
     }
 
     /**
      * Displays a message indicating a task has been deleted.
      *
      * @param task the task that was deleted
+     * @return a message indicating a task has been deleted
      */
-    public void showTaskDeleted(String task) {
+    public String showTaskDeleted(String task) {
+        String deletedTaskMessage = "OK, I'm deleting this task:\n     " + task;
         System.out.println("   ____________________________________________________________\n   "
-            + "OK, I'm deleting this task:\n     " + task + "\n   "
+            + deletedTaskMessage + "\n   "
             + "____________________________________________________________");
+        return deletedTaskMessage;
     }
 
     /**
@@ -93,21 +112,28 @@ public class Ui {
      *
      * @param task the task that was added
      * @param size the current number of tasks in the list
+     * @return a message indicating a task has been added
      */
-    public void showTaskAdded(String task, int size) {
+    public String showTaskAdded(String task, int size) {
+        String addedTaskMessage = "Got it. I've added this task:\n      " + task + "\n   Now you have "
+            + size + " tasks in the list.";
         showLine();
-        System.out.println("   Got it. I've added this task:\n      " + task + "\n   Now you have "
-            + size + " tasks in the list.");
+        System.out.println("   " + addedTaskMessage);
         showLine();
+        return addedTaskMessage;
     }
     /**
      * Displays a storage error message.
+     * @return the storage error message.
      */
-    public void showStorageError() {
+    public String showStorageError() {
+        String storageErrorMessage = "I'm sorry, I can't mark this task as done because something wrong happened "
+            + "with my cursed energy(my "
+            + "storage).\n";
         System.out.println("   ____________________________________________________________\n   "
-            + "I'm sorry, I can't mark this task as done because something wrong happened with my cursed energy(my "
-            + "storage).\n"
+            + storageErrorMessage
             + "   ____________________________________________________________\n");
+        return storageErrorMessage;
     }
 
     /**
@@ -122,31 +148,50 @@ public class Ui {
      * Displays an error message.
      *
      * @param message the error message to display
+     * @return the error message
      */
-    public void showError(String message) {
-        System.out.println(message);
+    public String showError(String message, boolean printLines) {
+        if (printLines) {
+            System.out.println("   ____________________________________________________________");
+            System.out.println("   " + message);
+            System.out.println("   ____________________________________________________________");
+        } else {
+            System.out.println(message);
+        }
+        return message;
     }
 
     /**
      * Displays a task in the list.
      *
-     * @param index the index of the task
-     * @param task the task to display
+     * @param taskList the list of tasks
+     * @return the list of tasks
      */
-    public void showTaskInList(int index, String task) {
-        System.out.println("    " + (index + 1) + ". " + task);
+    public String showTasksInList(TaskList taskList) {
+        showTaskListHeader();
+        String tasksInListMessage = "";
+        for (int i = 0; i < taskList.size(); i++) {
+            tasksInListMessage = tasksInListMessage + (i + 1) + "." + taskList.getTask(i).showTask() + "\n";
+        }
+        System.out.println("    " + tasksInListMessage);
+        showLine();
+        return tasksInListMessage;
     }
     /**
      * Displays the list of tasks that match the search keyword.
      *
      * @param matchingTasks the list of tasks that match the search keyword
+     * @return the list of tasks that match the search keyword
      */
-    public void showMatchingTasks(List<Task> matchingTasks) {
-        System.out.println("   ____________________________________________________________");
-        System.out.println("   Here are the matching tasks in your list:");
+    public String showMatchingTasks(List<Task> matchingTasks) {
+        String listOfMatchingTasks = "";
         for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println("   " + (i + 1) + "." + matchingTasks.get(i).showTask());
+            listOfMatchingTasks = listOfMatchingTasks + "   " + (i + 1) + "." + matchingTasks.get(i).showTask() + "\n";;
         }
+        String matchingTasksMessage = "Here are the matching tasks in your list:\n" + listOfMatchingTasks;
         System.out.println("   ____________________________________________________________");
+        System.out.println("   " + matchingTasksMessage);
+        System.out.println("   ____________________________________________________________");
+        return matchingTasksMessage;
     }
 }

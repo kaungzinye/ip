@@ -1,6 +1,7 @@
 // MainTest.java
 package testdirectory;
 
+import gojosatoru.GojoSatoru;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +39,7 @@ public class MainTest {
     @BeforeEach
     void setUp() throws Exception {
         command = new Command(inputFormatter, outputFormatter, inputDateFormat, UI);
-        storage = new Storage(FILE_PATH, inputFormatter, outputFormatter);
+        storage = new Storage(FILE_PATH, command, inputFormatter, outputFormatter);
         command.setStorage(storage);
         parser = new Parser(command);
         taskList = new TaskList();
@@ -128,10 +129,11 @@ public class MainTest {
     @Test
     void testMarkNonExistentTask() {
         GojoException exception = assertThrows(GojoException.class, () -> {
+
             parser.parseCommand("mark 1", taskList);
         });
         assertEquals("   ____________________________________________________________\n   " +
-            "My Six Eyes I can't find your task, because you it doesn't exist you idiot.\n   Not surprised since I'm stronger than you..\n   Try again...\n" +
+            "My Six Eyes can't find your task, because it doesn't exist you idiot.\n   Not surprised since I'm stronger than you..\n   Try again...\n" +
             "   ____________________________________________________________", exception.getMessage());
     }
 
@@ -175,4 +177,103 @@ public class MainTest {
             + "AGAIN IDIOT!\n"
             + "   ____________________________________________________________", exception.getMessage());
     }
+    /**
+     + Tests an invalid date format.
+     + Verifies that the correct exception message is thrown.
+     */
+    @Test
+    public void testInvalidCommandShowsError() throws GojoException{
+        String response = GojoSatoru.getResponse("invalid command");
+        assertEquals("Oi... I don't know what that means, didn't teach ya that in Jujutsu High..", response);
+    }
+    /**
+     + Tests an invalid date format.
+     + Verifies that the correct exception message is thrown.
+     */
+    @Test
+    public void testEmptyTaskShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("todo ");
+        assertEquals("Even with my Six Eyes, I can't tell what the name of your task is... BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!", response);
+    }
+    /**
+     + Tests an invalid date format.
+     + Verifies that the correct exception message is thrown.
+     */
+    @Test
+    public void testInvalidDateShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("deadline submit report /by 32/13/2020 2500");
+        assertEquals("Your formatting for the date of deadline is wrong or your date is invalid. It should be "
+            + inputDateFormat + ". Try again..", response);
+    }
+    /**
+     + Tests an invalid date format.
+     + Verifies that the correct exception message is thrown.
+     */
+    @Test
+    public void testTaskNotFoundShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("delete 999");
+        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since" +
+            " I'm stronger than you.. Try again...", response);
+    }
+
+    @Test
+    public void testSpecialCharacterTask() throws GojoException {
+        String response = GojoSatoru.getResponse("todo !@#$%^&*()");
+        assertEquals("Got it. I've added this task:\n      [T][ ] !@#$%^&*()\n   Now you have 1 tasks in the list.", response);
+    }
+
+    @Test
+    public void testMissingDeadlineDateShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("deadline return book /by");
+        assertEquals("The date provided is invalid or incorrectly formatted. Please check and try again.", response);
+    }
+
+    @Test
+    public void testMissingEventStartTimeShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("event project meeting /from /to 12/12/2023 1600");
+        assertEquals("The event must have a start and end time. Please check the format: /from <start time> /to <end time>", response);
+    }
+
+    @Test
+    public void testMissingEventEndTimeShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("event project meeting /from 12/12/2023 1400 /to");
+        assertEquals("The event must have a start and end time. Please check the format: /from <start time> /to <end time>", response);
+    }
+
+    @Test
+    public void testFindNonExistentTask() throws GojoException {
+        parser.parseCommand("todo read book", taskList);
+        String response = GojoSatoru.getResponse("find banana");
+        assertEquals("No matching tasks found.", response);
+    }
+
+    @Test
+    public void testMarkNegativeIndexShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("mark -1");
+        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since I'm"
+            + " stronger than you.. Try again...", response);
+    }
+
+    @Test
+    public void testMarkOutOfRangeTaskShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("mark 100");
+        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since I'm"
+            + " stronger than you.. Try again...", response);
+    }
+
+    @Test
+    public void testDeleteNegativeIndexShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("delete -1");
+        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since" +
+            " I'm stronger than you.. Try again...", response);
+    }
+
+    @Test
+    public void testDeleteOutOfRangeIndexShowsError() throws GojoException {
+        String response = GojoSatoru.getResponse("delete 999");
+        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since I'm stronger than you.. Try again...", response);
+    }
+
+
+
 }

@@ -23,7 +23,7 @@ public class ToDo extends Task {
      */
     @Override
     public String showTask() {
-        return (completed ? "[D][X] " : "[D][ ] ") + taskDescription;
+        return (completed ? "[T][X] " : "[T][ ] ") + taskDescription;
     }
 
     /**
