@@ -115,18 +115,21 @@ public class Command {
         String[] parts = input.split(" /from ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new MissingArgumentException(uiObject.showError(
-                "The event must have a start and end time. Please check the format: /from <start time> /to <end time>", true));
+                "The event must have a start and end time. "
+                    + "Please check the format: /from <start time> /to <end time>", true));
         }
 
         // Ensure splitting only occurs at the first "/to "
         String[] fromAndTo = parts[1].split(" /to ", 2);
         if (fromAndTo.length < 2 || fromAndTo[0].trim().isEmpty()) {
             throw new MissingArgumentException(uiObject.showError(
-                "The event must have a start and end time. Please check the format: /from <start time> /to <end time>", true));
+                "The event must have a start and end time. "
+                    + "Please check the format: /from <start time> /to <end time>", true));
         }
         if (fromAndTo[1].trim().isEmpty()) {
             throw new MissingArgumentException(uiObject.showError(
-                "The event must have a start and end time. Please check the format: /from <start time> /to <end time>", true));
+                "The event must have a start and end time. "
+                    + "Please check the format: /from <start time> /to <end time>", true));
         }
 
         try {
@@ -173,11 +176,11 @@ public class Command {
      * @return the list of matching tasks
      */
     public String handleFind(String userInput, TaskList taskList) {
-        String keyword = userInput.substring(5).trim();
-        if (keyword.isEmpty()) {
+        String[] keywords = userInput.substring(5).trim().split("\\s+");
+        if (keywords.length == 0 || (keywords.length == 1 && keywords[0].isEmpty())) {
             return uiObject.showError("The keyword for the find command cannot be empty.", true);
         }
-        List<Task> matchingTasks = taskList.findTasks(keyword);
+        List<Task> matchingTasks = taskList.findTasks(keywords);
         if (matchingTasks.isEmpty()) {
             return uiObject.showError("No matching tasks found.", true);
         } else {
