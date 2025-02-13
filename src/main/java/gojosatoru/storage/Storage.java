@@ -45,6 +45,7 @@ public class Storage {
      * @throws IOException if an I/O error occurs
      */
     public TaskList load() throws IOException {
+        assert filePath != null : "File path should not be null";
         TaskList taskList = new TaskList();
         File file = new File(filePath);
         if (!file.exists()) {
@@ -95,6 +96,7 @@ public class Storage {
      * @throws IOException if an I/O error occurs
      */
     public void save(TaskList taskList) throws IOException {
+        assert taskList != null : "TaskList should not be null";
         BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
         for (Task task : taskList.getTasks()) {
             writer.write(task.toSaveFormat() + "\n");
