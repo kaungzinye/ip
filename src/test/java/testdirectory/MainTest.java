@@ -1,15 +1,12 @@
-// MainTest.java
-package testdirectory;
-
-import gojosatoru.GojoSatoru;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.time.format.DateTimeFormatter;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.format.DateTimeFormatter;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import gojosatoru.GojoSatoru;
 import gojosatoru.command.Command;
 import gojosatoru.exceptions.GojoException;
 import gojosatoru.exceptions.InvalidCommandException;
@@ -19,6 +16,9 @@ import gojosatoru.storage.Storage;
 import gojosatoru.tasks.TaskList;
 import gojosatoru.ui.Ui;
 
+/**
+ * Tests for the main class.
+ */
 public class MainTest {
     private static final String FILE_PATH = "./src/main/data/cursedEnergy.txt";
     private static final Ui UI = new Ui();
@@ -32,9 +32,9 @@ public class MainTest {
     private TaskList taskList;
 
     /**
-     + Sets up the test environment before each test.
-     + Initializes the command, storage, parser, and task list.
-     + Clears the storage by saving an empty TaskList.
+     * Sets up the test environment before each test.
+     * Initializes the command, storage, parser, and task list.
+     * Clears the storage by saving an empty TaskList.
      */
     @BeforeEach
     void setUp() throws Exception {
@@ -47,8 +47,8 @@ public class MainTest {
     }
 
     /**
-     + Tests adding a ToDo task.
-     + Verifies that the task list size is 1 after adding the task.
+     * Tests adding a ToDo task.
+     * Verifies that the task list size is 1 after adding the task.
      */
     @Test
     void testAddTask() throws GojoException {
@@ -57,8 +57,8 @@ public class MainTest {
     }
 
     /**
-     + Tests adding a Deadline task.
-     + Verifies that the task list size is 1 after adding the task.
+     * Tests adding a Deadline task.
+     * Verifies that the task list size is 1 after adding the task.
      */
     @Test
     void testAddDeadline() throws GojoException {
@@ -67,8 +67,8 @@ public class MainTest {
     }
 
     /**
-     + Tests adding an Event task.
-     + Verifies that the task list size is 1 after adding the task.
+     * Tests adding an Event task.
+     * Verifies that the task list size is 1 after adding the task.
      */
     @Test
     void testAddEvent() throws GojoException {
@@ -77,8 +77,8 @@ public class MainTest {
     }
 
     /**
-     + Tests listing all tasks.
-     + Verifies that the task list size is 3 after adding three tasks.
+     * Tests listing all tasks.
+     * Verifies that the task list size is 3 after adding three tasks.
      */
     @Test
     void testListTasks() throws GojoException {
@@ -89,8 +89,8 @@ public class MainTest {
     }
 
     /**
-     + Tests marking a task as completed.
-     + Verifies that the task is marked as completed.
+     * Tests marking a task as completed.
+     * Verifies that the task is marked as completed.
      */
     @Test
     void testMarkTask() throws GojoException {
@@ -100,8 +100,8 @@ public class MainTest {
     }
 
     /**
-     + Tests unmarking a task as not completed.
-     + Verifies that the task is marked as not completed.
+     * Tests unmarking a task as not completed.
+     * Verifies that the task is marked as not completed.
      */
     @Test
     void testUnmarkTask() throws GojoException {
@@ -112,8 +112,8 @@ public class MainTest {
     }
 
     /**
-     + Tests deleting a task.
-     + Verifies that the task list size is 0 after deleting the task.
+     * Tests deleting a task.
+     * Verifies that the task list size is 0 after deleting the task.
      */
     @Test
     void testDeleteTask() throws GojoException {
@@ -123,23 +123,23 @@ public class MainTest {
     }
 
     /**
-     + Tests marking a non-existent task.
-     + Verifies that the correct exception message is thrown.
+     * Tests marking a non-existent task.
+     * Verifies that the correct exception message is thrown.
      */
     @Test
     void testMarkNonExistentTask() {
         GojoException exception = assertThrows(GojoException.class, () -> {
-
             parser.parseCommand("mark 1", taskList);
         });
-        assertEquals("   ____________________________________________________________\n   " +
-            "My Six Eyes can't find your task, because it doesn't exist you idiot.\n   Not surprised since I'm stronger than you..\n   Try again...\n" +
-            "   ____________________________________________________________", exception.getMessage());
+        assertEquals("   ____________________________________________________________\n   "
+            + "My Six Eyes can't find your task, because it doesn't exist you idiot.\n   "
+            + "Not surprised since I'm stronger than you..\n   Try again...\n"
+            + "   ____________________________________________________________", exception.getMessage());
     }
 
     /**
-     + Tests finding a task by keyword.
-     + Verifies that the task list size is 1 after finding the task.
+     * Tests finding a task by keyword.
+     * Verifies that the task list size is 1 after finding the task.
      */
     @Test
     void testFindTask() throws GojoException {
@@ -149,8 +149,8 @@ public class MainTest {
     }
 
     /**
-     + Tests an invalid command.
-     + Verifies that the correct exception message is thrown.
+     * Tests an invalid command.
+     * Verifies that the correct exception message is thrown.
      */
     @Test
     void testInvalidCommand() {
@@ -163,8 +163,8 @@ public class MainTest {
     }
 
     /**
-     + Tests a missing argument for a command.
-     + Verifies that the correct exception message is thrown.
+     * Tests a missing argument for a command.
+     * Verifies that the correct exception message is thrown.
      */
     @Test
     void testMissingArgument() {
@@ -177,69 +177,99 @@ public class MainTest {
             + "AGAIN IDIOT!\n"
             + "   ____________________________________________________________", exception.getMessage());
     }
+
     /**
-     + Tests an invalid date format.
-     + Verifies that the correct exception message is thrown.
+     * Tests an invalid date format.
+     * Verifies that the correct exception message is thrown.
      */
     @Test
-    public void testInvalidCommandShowsError() throws GojoException{
+    public void testInvalidCommandShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("invalid command");
         assertEquals("Oi... I don't know what that means, didn't teach ya that in Jujutsu High..", response);
     }
+
     /**
-     + Tests an invalid date format.
-     + Verifies that the correct exception message is thrown.
+     * Tests an invalid date format.
+     * Verifies that the correct exception message is thrown.
      */
     @Test
     public void testEmptyTaskShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("todo ");
-        assertEquals("Even with my Six Eyes, I can't tell what the name of your task is... BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!", response);
+        assertEquals("Even with my Six Eyes, I can't tell what the name of your task is... "
+            + "BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!", response);
     }
+
     /**
-     + Tests an invalid date format.
-     + Verifies that the correct exception message is thrown.
+     * Tests an invalid date format.
+     * Verifies that the correct exception message is thrown.
      */
     @Test
     public void testInvalidDateShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("deadline submit report /by 32/13/2020 2500");
-        assertEquals("Your formatting for the date of deadline is wrong or your date is invalid. It should be "
-            + inputDateFormat + ". Try again..", response);
+        assertEquals(
+            "Your formatting for the date of deadline is wrong or your date is invalid. It should be "
+                + inputDateFormat + ". Try again..", response);
     }
+
     /**
-     + Tests an invalid date format.
-     + Verifies that the correct exception message is thrown.
+     * Tests an invalid date format.
+     * Verifies that the correct exception message is thrown.
      */
     @Test
     public void testTaskNotFoundShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("delete 999");
-        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since" +
-            " I'm stronger than you.. Try again...", response);
+        assertEquals(
+            "My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since"
+                + " I'm stronger than you.. Try again...", response);
     }
 
+    /**
+     * Tests a special character task.
+     * Verifies that the task is added correctly.
+     */
     @Test
     public void testSpecialCharacterTask() throws GojoException {
         String response = GojoSatoru.getResponse("todo !@#$%^&*()");
-        assertEquals("Got it. I've added this task:\n      [T][ ] !@#$%^&*()\n   Now you have 1 tasks in the list.", response);
+        assertEquals("Got it. I've added this task:\n      "
+            + "[T][ ] !@#$%^&*()\n   Now you have 1 tasks in the list.", response);
     }
 
+    /**
+     * Tests a missing deadline date.
+     * Verifies that the correct exception message is thrown.
+     */
     @Test
     public void testMissingDeadlineDateShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("deadline return book /by");
         assertEquals("The date provided is invalid or incorrectly formatted. Please check and try again.", response);
     }
 
+    /**
+     * Tests a missing event start time.
+     * Verifies that the correct exception message is thrown.
+     */
     @Test
     public void testMissingEventStartTimeShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("event project meeting /from /to 12/12/2023 1600");
-        assertEquals("The event must have a start and end time. Please check the format: /from <start time> /to <end time>", response);
+        assertEquals("The event must have a start and end time. "
+            + "Please check the format: /from <start time> /to <end time>", response);
     }
 
+    /**
+     * Tests a missing event end time.
+     * Verifies that the correct exception message is thrown.
+     */
     @Test
     public void testMissingEventEndTimeShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("event project meeting /from 12/12/2023 1400 /to");
-        assertEquals("The event must have a start and end time. Please check the format: /from <start time> /to <end time>", response);
+        assertEquals("The event must have a start and end time. "
+            + "Please check the format: /from <start time> /to <end time>", response);
     }
 
+    /**
+     * Tests finding a non-existent task.
+     * Verifies that the correct exception message is thrown.
+     */
     @Test
     public void testFindNonExistentTask() throws GojoException {
         parser.parseCommand("todo read book", taskList);
@@ -247,33 +277,50 @@ public class MainTest {
         assertEquals("No matching tasks found.", response);
     }
 
+    /**
+     * Tests marking a task with a negative index.
+     * Verifies that the correct exception message is thrown.
+     */
     @Test
     public void testMarkNegativeIndexShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("mark -1");
-        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since I'm"
-            + " stronger than you.. Try again...", response);
+        assertEquals(
+            "My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since I'm"
+                + " stronger than you.. Try again...", response);
     }
 
+    /**
+     * Tests marking a task with an out-of-range index.
+     * Verifies that the correct exception message is thrown.
+     */
     @Test
     public void testMarkOutOfRangeTaskShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("mark 100");
-        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since I'm"
-            + " stronger than you.. Try again...", response);
+        assertEquals(
+            "My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since I'm"
+                + " stronger than you.. Try again...", response);
     }
 
+    /**
+     * Tests deleting a task with a negative index.
+     * Verifies that the correct exception message is thrown.
+     */
     @Test
     public void testDeleteNegativeIndexShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("delete -1");
-        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since" +
-            " I'm stronger than you.. Try again...", response);
+        assertEquals(
+            "My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since"
+                + " I'm stronger than you.. Try again...", response);
     }
 
+    /**
+     * Tests deleting a task with an out-of-range index.
+     * Verifies that the correct exception message is thrown.
+     */
     @Test
     public void testDeleteOutOfRangeIndexShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("delete 999");
-        assertEquals("My Six Eyes can't find your task, because it doesn't exist you idiot. Not surprised since I'm stronger than you.. Try again...", response);
+        assertEquals("My Six Eyes can't find your task, "
+            + "because it doesn't exist you idiot. Not surprised since I'm stronger than you.. Try again...", response);
     }
-
-
-
 }

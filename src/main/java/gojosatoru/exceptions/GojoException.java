@@ -19,6 +19,8 @@ public class GojoException extends Exception {
      * @return the error message without the lines
      */
     public String getMessageForGui() {
-        return getMessage().replaceAll("   ____________________________________________________________\n  ", "").replaceAll("\n   ____________________________________________________________", "");
+        return getMessage().replaceAll("   __________________________________________"
+            + "__________________\n  ", "")
+            .replaceAll("\n   ____________________________________________________________", "");
     }
 }

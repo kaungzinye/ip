@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 import gojosatoru.command.Command;
 import gojosatoru.exceptions.GojoException;
-import gojosatoru.exceptions.InvalidCommandException;
 import gojosatoru.parser.Parser;
 import gojosatoru.storage.Storage;
 import gojosatoru.tasks.TaskList;
