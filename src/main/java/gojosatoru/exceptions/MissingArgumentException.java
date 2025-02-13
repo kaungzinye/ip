@@ -8,14 +8,16 @@ public class MissingArgumentException extends GojoException {
         + " Even with my Six Eyes, I can't tell what the name of your task is... "
         + "BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!\n"
         + "   ____________________________________________________________";
+    private static final String DEFAULT_GUI_MESSAGE = "Even with my Six Eyes, "
+        + "I can't tell what the name of your task is... "
+        + "BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!";
     private final String guiMessage;
     /**
      * Constructs a MissingArgumentException with a default error message.
      */
     public MissingArgumentException() {
         super(DEFAULT_MESSAGE);
-        this.guiMessage = "Even with my Six Eyes, I can't tell what the name of your task is... "
-            + "BECAUSE IT'S EMPTY! WRITE IT AGAIN IDIOT!";
+        this.guiMessage = DEFAULT_GUI_MESSAGE;
     }
 
     /**
