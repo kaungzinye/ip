@@ -72,6 +72,7 @@ public class GojoSatoru {
         UI.showWelcome();
         while (true) {
             String userInput = userScanner.nextLine();
+            assert userInput != null : "User input should not be null";
             try {
                 getResponse(userInput);
                 if (Objects.equals(userInput, "bye")) {

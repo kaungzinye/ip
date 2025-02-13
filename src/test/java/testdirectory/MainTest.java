@@ -1,3 +1,5 @@
+package testdirectory;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -43,7 +45,8 @@ public class MainTest {
         command.setStorage(storage);
         parser = new Parser(command);
         taskList = new TaskList();
-        storage.save(taskList); // Clear storage by saving an empty TaskList
+        storage.save(taskList);
+        assert taskList.size() == 0 : "Task list should be empty after setup";
     }
 
     /**
@@ -53,6 +56,7 @@ public class MainTest {
     @Test
     void testAddTask() throws GojoException {
         parser.parseCommand("todo read book", taskList);
+        assert taskList.size() == 1 : "Task list size should be 1 after adding a task";
         assertEquals(1, taskList.size());
     }
 

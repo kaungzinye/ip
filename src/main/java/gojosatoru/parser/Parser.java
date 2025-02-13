@@ -46,6 +46,8 @@ public class Parser {
      * @throws GojoException if the command is invalid or an error occurs during execution
      */
     public String parseCommand(String userInput, TaskList taskList) throws GojoException {
+        assert userInput != null : "Input should not be null";
+        assert taskList != null : "TaskList should not be null";
         String commandKey = userInput.split("\\s+")[0];
         CommandHandler handler = commandHandlers.get(commandKey);
         if (handler != null) {
