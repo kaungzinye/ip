@@ -25,10 +25,20 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Setup JavaFX
+      - name: Setup JavaFX (Ubuntu)
+        if: runner.os == 'Linux'
         run: |
           sudo apt update
           sudo apt install -y openjfx
+
+      - name: Setup JavaFX (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install openjdk@17
+          brew install openjfx
+          echo "export PATH=\"/usr/local/opt/openjdk/bin:\$PATH\"" >> ~/.zshrc
+          echo "export JAVA_HOME=\"$(/usr/libexec/java_home)\"" >> ~/.zshrc
+          source ~/.zshrc
 
       - name: Ensure cursedEnergy.txt exists
         run: |
@@ -39,12 +49,7 @@ jobs:
         run: ./gradlew check
 
       - name: Perform IO redirection test (*NIX)
-        if: runner.os == 'Linux'
-        working-directory: ${{ github.workspace }}/text-ui-test
-        run: ./runtest.sh
-
-      - name: Perform IO redirection test (MacOS)
-        if: runner.os == 'macOS'
+        if: runner.os == 'Linux' || runner.os == 'macOS'
         working-directory: ${{ github.workspace }}/text-ui-test
         run: ./runtest.sh
 
