@@ -76,11 +76,18 @@ public class TaskList {
     public int size() {
         return tasks.size();
     }
-
     /**
-     * Clears all tasks from the list.
+     * Checks if the list contains a task with the specified description.
+     *
+     * @param newTaskName the description of the task to check for
+     * @return true if the list contains a task with the specified description, false otherwise
      */
-    public void clear() {
-        tasks.clear();
+    public boolean hasDuplicate(String newTaskName) {
+        for (Task task : tasks) {
+            if (task.getTaskDescription().equals(newTaskName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -34,11 +34,10 @@ public class GojoSatoru {
     private static String outputDateFormat = "MMM dd yyyy HHmm";
     private static DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(inputDateFormat);
     private static DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputDateFormat);
-    private static Command command = new Command(inputFormatter, outputFormatter, inputDateFormat, UI);
+    private static TaskList taskList = new TaskList();
+    private static Command command = new Command(inputFormatter, outputFormatter, inputDateFormat, UI, taskList);
     private static Storage storage = new Storage(FILE_PATH, command, inputFormatter, outputFormatter);
     private static Parser parser = new Parser(command);
-
-    private static TaskList taskList;
 
     static {
         try {
@@ -58,7 +57,7 @@ public class GojoSatoru {
      */
     public static String getResponse(String input) throws GojoException {
         try {
-            return parser.parseCommand(input, taskList);
+            return parser.parseCommand(input);
         } catch (GojoException e) {
             return e.getMessageForGui();
         }
@@ -79,7 +78,7 @@ public class GojoSatoru {
                     break;
                 }
             } catch (GojoException e) {
-                UI.showError(e.getMessage(), false);
+                UI.showError(e.getMessage(), true);
             }
         }
 

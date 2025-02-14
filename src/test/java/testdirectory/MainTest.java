@@ -40,11 +40,11 @@ public class MainTest {
      */
     @BeforeEach
     void setUp() throws Exception {
-        command = new Command(inputFormatter, outputFormatter, inputDateFormat, UI);
+        taskList = new TaskList();
+        command = new Command(inputFormatter, outputFormatter, inputDateFormat, UI, taskList);
         storage = new Storage(FILE_PATH, command, inputFormatter, outputFormatter);
         command.setStorage(storage);
         parser = new Parser(command);
-        taskList = new TaskList();
         storage.save(taskList);
         assert taskList.size() == 0 : "Task list should be empty after setup";
     }
@@ -55,7 +55,7 @@ public class MainTest {
      */
     @Test
     void testAddTask() throws GojoException {
-        parser.parseCommand("todo read book", taskList);
+        parser.parseCommand("todo read book");
         assert taskList.size() == 1 : "Task list size should be 1 after adding a task";
         assertEquals(1, taskList.size());
     }
@@ -66,7 +66,7 @@ public class MainTest {
      */
     @Test
     void testAddDeadline() throws GojoException {
-        parser.parseCommand("deadline return book /by 12/12/2023 1800", taskList);
+        parser.parseCommand("deadline return book /by 12/12/2023 1800");
         assertEquals(1, taskList.size());
     }
 
@@ -76,7 +76,7 @@ public class MainTest {
      */
     @Test
     void testAddEvent() throws GojoException {
-        parser.parseCommand("event project meeting /from 12/12/2023 1400 /to 12/12/2023 1600", taskList);
+        parser.parseCommand("event project meeting /from 12/12/2023 1400 /to 12/12/2023 1600");
         assertEquals(1, taskList.size());
     }
 
@@ -86,9 +86,9 @@ public class MainTest {
      */
     @Test
     void testListTasks() throws GojoException {
-        parser.parseCommand("todo read book", taskList);
-        parser.parseCommand("deadline return book /by 12/12/2023 1800", taskList);
-        parser.parseCommand("event project meeting /from 12/12/2023 1400 /to 12/12/2023 1600", taskList);
+        parser.parseCommand("todo read book");
+        parser.parseCommand("deadline return book /by 12/12/2023 1800");
+        parser.parseCommand("event project meeting /from 12/12/2023 1400 /to 12/12/2023 1600");
         assertEquals(3, taskList.size());
     }
 
@@ -98,8 +98,8 @@ public class MainTest {
      */
     @Test
     void testMarkTask() throws GojoException {
-        parser.parseCommand("todo read book", taskList);
-        parser.parseCommand("mark 1", taskList);
+        parser.parseCommand("todo read book");
+        parser.parseCommand("mark 1");
         assertEquals(true, taskList.getTask(0).isCompleted());
     }
 
@@ -109,9 +109,9 @@ public class MainTest {
      */
     @Test
     void testUnmarkTask() throws GojoException {
-        parser.parseCommand("todo read book", taskList);
-        parser.parseCommand("mark 1", taskList);
-        parser.parseCommand("unmark 1", taskList);
+        parser.parseCommand("todo read book");
+        parser.parseCommand("mark 1");
+        parser.parseCommand("unmark 1");
         assertEquals(false, taskList.getTask(0).isCompleted());
     }
 
@@ -121,8 +121,8 @@ public class MainTest {
      */
     @Test
     void testDeleteTask() throws GojoException {
-        parser.parseCommand("todo read book", taskList);
-        parser.parseCommand("delete 1", taskList);
+        parser.parseCommand("todo read book");
+        parser.parseCommand("delete 1");
         assertEquals(0, taskList.size());
     }
 
@@ -133,7 +133,7 @@ public class MainTest {
     @Test
     void testMarkNonExistentTask() {
         GojoException exception = assertThrows(GojoException.class, () -> {
-            parser.parseCommand("mark 1", taskList);
+            parser.parseCommand("mark 1");
         });
         assertEquals("   ____________________________________________________________\n   "
             + "My Six Eyes can't find your task, because it doesn't exist you idiot.\n   "
@@ -147,8 +147,8 @@ public class MainTest {
      */
     @Test
     void testFindTask() throws GojoException {
-        parser.parseCommand("todo read book", taskList);
-        parser.parseCommand("find read", taskList);
+        parser.parseCommand("todo read book");
+        parser.parseCommand("find read");
         assertEquals(1, taskList.size());
     }
 
@@ -159,7 +159,7 @@ public class MainTest {
     @Test
     void testInvalidCommand() {
         InvalidCommandException exception = assertThrows(InvalidCommandException.class, () -> {
-            parser.parseCommand("invalid command", taskList);
+            parser.parseCommand("invalid command");
         });
         assertEquals("   ____________________________________________________________\n  "
             + " Oi... I don't know what that means, didn't teach ya that in Jujutsu High..\n"
@@ -173,7 +173,7 @@ public class MainTest {
     @Test
     void testMissingArgument() {
         MissingArgumentException exception = assertThrows(MissingArgumentException.class, () -> {
-            parser.parseCommand("todo", taskList);
+            parser.parseCommand("todo");
         });
         assertEquals("   ____________________________________________________________\n  "
             + " Even with my Six Eyes, I can't tell what the name of your task is... "
@@ -276,7 +276,7 @@ public class MainTest {
      */
     @Test
     public void testFindNonExistentTask() throws GojoException {
-        parser.parseCommand("todo read book", taskList);
+        parser.parseCommand("todo read book");
         String response = GojoSatoru.getResponse("find banana");
         assertEquals("No matching tasks found.", response);
     }

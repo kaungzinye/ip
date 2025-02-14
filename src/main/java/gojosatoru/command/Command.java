@@ -26,6 +26,7 @@ import gojosatoru.ui.Ui;
  * The class also formats dates and manages user interactions through the `Ui` component.
  */
 public class Command {
+    private TaskList taskList;
     private DateTimeFormatter inputFormatter;
     private DateTimeFormatter outputFormatter;
     private String dateFormat;
@@ -41,11 +42,13 @@ public class Command {
      * @param uiObject the UI component for user interactions
      */
     public Command(DateTimeFormatter inputFormatter, DateTimeFormatter outputFormatter,
-                   String dateFormat, Ui uiObject) {
+                   String dateFormat, Ui uiObject, TaskList taskList) {
         this.inputFormatter = inputFormatter;
         this.outputFormatter = outputFormatter;
         this.dateFormat = dateFormat;
         this.uiObject = uiObject;
+        this.taskList = taskList;
+        assert taskList != null : "TaskList should not be null";
     }
 
     public void setStorage(Storage storage) {
@@ -135,24 +138,23 @@ public class Command {
         try {
             LocalDateTime from = LocalDateTime.parse(fromAndTo[0].trim(), inputFormatter);
             LocalDateTime to = LocalDateTime.parse(fromAndTo[1].trim(), inputFormatter);
-            return new Event(parts[0].replace("event ", "").trim(), outputFormatter, from, to);
+            String taskName = parts[0].replace("event ", "").trim();
+            return new Event(taskName, outputFormatter, from, to);
         } catch (DateTimeParseException e) {
             throw new MissingArgumentException(uiObject.showError("Your formatting and/or the "
                 + "timings of the event is wrong. It should be " + dateFormat + ". Try again..", true));
         }
     }
 
-
     /**
      * Handles marking a task as completed.
      * Throws TaskNotFoundException if the task does not exist.
      *
      * @param userInput the user input
-     * @param taskList the list of tasks
      * @return the task marked as completed
      * @throws TaskNotFoundException if the task does not exist
      */
-    public String handleMark(String userInput, TaskList taskList) throws TaskNotFoundException {
+    public String handleMark(String userInput) throws TaskNotFoundException {
         int index = getIndex(userInput);
         if (index < 0 || index >= taskList.size()) {
             throw new TaskNotFoundException();
@@ -172,10 +174,9 @@ public class Command {
      * Displays an error if the keyword is empty or no matching tasks are found.
      *
      * @param userInput the user input
-     * @param taskList the list of tasks
      * @return the list of matching tasks
      */
-    public String handleFind(String userInput, TaskList taskList) {
+    public String handleFind(String userInput) {
         String[] keywords = userInput.substring(5).trim().split("\\s+");
         if (keywords.length == 0 || (keywords.length == 1 && keywords[0].isEmpty())) {
             return uiObject.showError("The keyword for the find command cannot be empty.", true);
@@ -191,11 +192,9 @@ public class Command {
     /**
      * Handles listing all tasks.
      * Displays the task list header and each task in the list.
-     *
-     * @param taskList the list of tasks
      * @return the list of tasks
      */
-    public String handleList(String userInput, TaskList taskList) {
+    public String handleList(String userInput) {
         return uiObject.showTasksInList(taskList);
     }
 
@@ -204,11 +203,10 @@ public class Command {
      * Throws TaskNotFoundException if the task does not exist.
      *
      * @param userInput the user input
-     * @param taskList the list of tasks
      * @return the task marked as not completed
      * @throws TaskNotFoundException if the task does not exist
      */
-    public String handleUnmark(String userInput, TaskList taskList) throws TaskNotFoundException {
+    public String handleUnmark(String userInput) throws TaskNotFoundException {
         int index = getIndex(userInput);
         if (index < 0 || index >= taskList.size()) {
             throw new TaskNotFoundException();
@@ -228,9 +226,8 @@ public class Command {
      * Displays the goodbye message.
      *
      * @param userInput the user input
-     * @param taskList the list of tasks
      */
-    public String handleBye(String userInput, TaskList taskList) {
+    public String handleBye(String userInput) {
         return uiObject.showBye();
     }
 
@@ -239,11 +236,10 @@ public class Command {
      * Throws TaskNotFoundException if the task does not exist.
      *
      * @param userInput the user input
-     * @param taskList the list of tasks
      * @return the task deleted
      * @throws TaskNotFoundException if the task does not exist
      */
-    public String handleDelete(String userInput, TaskList taskList) throws TaskNotFoundException {
+    public String handleDelete(String userInput) throws TaskNotFoundException {
         int index = getIndex(userInput);
         if (index < 0 || index >= taskList.size()) {
             throw new TaskNotFoundException();
@@ -258,19 +254,35 @@ public class Command {
     }
 
     /**
+     * Handles duplicate task scenario.
+     * Prompts the user to confirm if they want to add the duplicate task.
+     *
+     * @return true if the user confirms, false otherwise
+     */
+    private boolean handleDuplicate() {
+        uiObject.showError("A task with the same name already exists. Do you want to add it anyway?", true);
+        String userResponse = uiObject.readCommand().trim().toUpperCase();
+        return userResponse.equals("Y");
+    }
+
+    /**
      * Handles adding a task.
      * Throws GojoException if the task type is invalid or arguments are missing.
      *
      * @param userInput the user input
-     * @param taskList the list of tasks
      * @return the task added
      * @throws GojoException if the task type is invalid or arguments are missing
      */
-    public String handleAddTask(String userInput, TaskList taskList) throws GojoException {
+    public String handleAddTask(String userInput) throws GojoException {
         String[] words = userInput.split("\\s+", 2);
         String typeOfTask = words[0];
         if (words.length < 2 || words[1].trim().isEmpty()) {
             throw new MissingArgumentException();
+        }
+        String newTaskDescription = words[1];
+        boolean isDuplicate = taskList.hasDuplicate(newTaskDescription);
+        if (isDuplicate && !handleDuplicate()) {
+            return uiObject.showError("Task addition canceled.", true);
         }
         Task newTask;
         switch (typeOfTask) {

@@ -24,6 +24,10 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
+      - name: Ensure cursedEnergy.txt exists
+        run: |
+          mkdir -p src/main/data
+          touch src/main/data/cursedEnergy.txt
 
       - name: Build and check with Gradle
         run: ./gradlew check

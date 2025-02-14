@@ -7,7 +7,6 @@ import gojosatoru.command.Command;
 import gojosatoru.command.CommandHandler;
 import gojosatoru.exceptions.GojoException;
 import gojosatoru.exceptions.InvalidCommandException;
-import gojosatoru.tasks.TaskList;
 
 /**
  * Parses user input and executes the corresponding commands.
@@ -42,16 +41,14 @@ public class Parser {
      * Parses the user input and executes the corresponding command.
      *
      * @param userInput the input string entered by the user
-     * @param taskList the list of tasks to operate on
      * @throws GojoException if the command is invalid or an error occurs during execution
      */
-    public String parseCommand(String userInput, TaskList taskList) throws GojoException {
+    public String parseCommand(String userInput) throws GojoException {
         assert userInput != null : "Input should not be null";
-        assert taskList != null : "TaskList should not be null";
         String commandKey = userInput.split("\\s+")[0];
         CommandHandler handler = commandHandlers.get(commandKey);
         if (handler != null) {
-            return handler.handle(userInput, taskList);
+            return handler.handle(userInput);
         } else {
             throw new InvalidCommandException();
         }
