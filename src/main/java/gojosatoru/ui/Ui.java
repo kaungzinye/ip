@@ -11,6 +11,7 @@ import gojosatoru.tasks.TaskList;
  */
 public class Ui {
     private Scanner scanner;
+    private String nextInput;
 
     /**
      * Constructs a Ui object.
@@ -25,6 +26,11 @@ public class Ui {
      * @return the command entered by the user
      */
     public String readCommand() {
+        if (nextInput != null) {
+            String input = nextInput;
+            nextInput = null;
+            return input;
+        }
         return scanner.nextLine();
     }
 
@@ -193,5 +199,13 @@ public class Ui {
         System.out.println("   " + matchingTasksMessage);
         System.out.println("   ____________________________________________________________");
         return matchingTasksMessage;
+    }
+    /**
+     * Displays a message indicating a task has been updated.
+     *
+     * @param nextInput the input string for the next command
+     */
+    public void setNextInput(String nextInput) {
+        this.nextInput = nextInput;
     }
 }

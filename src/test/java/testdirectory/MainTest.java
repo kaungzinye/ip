@@ -327,4 +327,25 @@ public class MainTest {
         assertEquals("My Six Eyes can't find your task, "
             + "because it doesn't exist you idiot. Not surprised since I'm stronger than you.. Try again...", response);
     }
+    /**
+     * Tests handling a duplicate task.
+     * Verifies that the task is not added to the task list.
+     */
+    @Test
+    void testHandleDuplicateTask() throws GojoException {
+        // Add a task
+        command.handleAddTask("todo read book");
+        assertEquals(1, taskList.size());
+
+        // Try to add the same task again
+        UI.setNextInput("N"); // Simulate user input "N" for not adding the duplicate task
+        String response = command.handleAddTask("todo read book");
+        assertEquals("Task addition canceled.", response);
+        assertEquals(1, taskList.size());
+
+        // Try to add the same task again with confirmation
+        UI.setNextInput("Y"); // Simulate user input "Y" for adding the duplicate task
+        command.handleAddTask("todo read book");
+        assertEquals(2, taskList.size());
+    }
 }
