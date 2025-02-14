@@ -24,6 +24,12 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
+
+      - name: Setup JavaFX
+        run: |
+          sudo apt update
+          sudo apt install -y openjfx
+
       - name: Ensure cursedEnergy.txt exists
         run: |
           mkdir -p src/main/data
