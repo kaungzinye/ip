@@ -255,7 +255,7 @@ public class MainTest {
     @Test
     public void testMissingEventStartTimeShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("event project meeting /from /to 12/12/2023 1600");
-        assertEquals("The event must have a start and end time. "
+        assertEquals("The event must have a start and end time. Idiot... "
             + "Please check the format: /from <start time> /to <end time>", response);
     }
 
@@ -266,7 +266,7 @@ public class MainTest {
     @Test
     public void testMissingEventEndTimeShowsError() throws GojoException {
         String response = GojoSatoru.getResponse("event project meeting /from 12/12/2023 1400 /to");
-        assertEquals("The event must have a start and end time. "
+        assertEquals("The event must have a start and end time. Idiot... "
             + "Please check the format: /from <start time> /to <end time>", response);
     }
 
@@ -278,7 +278,7 @@ public class MainTest {
     public void testFindNonExistentTask() throws GojoException {
         parser.parseCommand("todo read book");
         String response = GojoSatoru.getResponse("find banana");
-        assertEquals("No matching tasks found.", response);
+        assertEquals("My Six Eyes didn't see any tasks with a similar cursed energy!", response);
     }
 
     /**

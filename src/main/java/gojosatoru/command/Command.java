@@ -126,12 +126,12 @@ public class Command {
         String[] fromAndTo = parts[1].split(" /to ", 2);
         if (fromAndTo.length < 2 || fromAndTo[0].trim().isEmpty()) {
             throw new MissingArgumentException(uiObject.showError(
-                "The event must have a start and end time. "
+                "The event must have a start and end time. Idiot... "
                     + "Please check the format: /from <start time> /to <end time>", true));
         }
         if (fromAndTo[1].trim().isEmpty()) {
             throw new MissingArgumentException(uiObject.showError(
-                "The event must have a start and end time. "
+                "The event must have a start and end time. Idiot... "
                     + "Please check the format: /from <start time> /to <end time>", true));
         }
 
@@ -183,7 +183,7 @@ public class Command {
         }
         List<Task> matchingTasks = taskList.findTasks(keywords);
         if (matchingTasks.isEmpty()) {
-            return uiObject.showError("No matching tasks found.", true);
+            return uiObject.showError("My Six Eyes didn't see any tasks with a similar cursed energy!", true);
         } else {
             return uiObject.showMatchingTasks(matchingTasks);
         }
@@ -260,7 +260,7 @@ public class Command {
      * @return true if the user confirms, false otherwise
      */
     private boolean handleDuplicate() {
-        uiObject.showError("A task with the same name already exists. Do you want to add it anyway?", true);
+        uiObject.showError("So..... a task with the same name already exists. Do you want to add it anyway?", true);
         String userResponse = uiObject.readCommand().trim().toUpperCase();
         return userResponse.equals("Y");
     }
