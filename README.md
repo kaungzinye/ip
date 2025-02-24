@@ -1,26 +1,109 @@
-# gojosatoru project template
+# GojoSatoru Task Manager
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+GojoSatoru is a task management application that helps you keep track of your tasks, deadlines, and events. It provides a command-line interface for adding, listing, marking, unmarking, deleting, and finding tasks.
 
-## Setting up in Intellij
+## Features
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+- Add tasks (ToDo, Deadline, Event)
+- List all tasks
+- Mark tasks as completed
+- Unmark tasks as not completed
+- Delete tasks
+- Find tasks by keyword
+- Handle duplicate tasks
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 17** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/gojosatoru/java/gojosatoru.java` file, right-click it, and choose `Run gojosatoru.gojosatoru()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
+## Getting Started
+
+### Prerequisites
+
+- Java 17 Azul
+- Gradle
+
+### Installation
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/kaungzinye/gojosatoru.git
+   cd gojosatoru
    ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
+
+2. Build the project using Gradle:
+   ```sh
+   ./gradlew build
    ```
 
-**Warning:** Keep the `src\gojosatoru\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+### Usage
+
+1. Run the application:
+   ```sh
+   ./gradlew run
+   ```
+
+2. Use the following commands to interact with the application:
+
+   - Add a ToDo task:
+     ```sh
+     todo <task description>
+     ```
+
+   - Add a Deadline task:
+     ```sh
+     deadline <task description> /by <dd/MM/yyyy HHmm>
+     ```
+
+   - Add an Event task:
+     ```sh
+     event <task description> /from <dd/MM/yyyy HHmm> /to <dd/MM/yyyy HHmm>
+     ```
+
+   - List all tasks:
+     ```sh
+     list
+     ```
+
+   - Mark a task as completed:
+     ```sh
+     mark <task number>
+     ```
+
+   - Unmark a task as not completed:
+     ```sh
+     unmark <task number>
+     ```
+
+   - Delete a task:
+     ```sh
+     delete <task number>
+     ```
+
+   - Find tasks by keyword:
+     ```sh
+     find <keyword>
+     ```
+
+   - Exit the application:
+     ```sh
+     bye
+     ```
+
+### Example
+
+```sh
+todo read book
+deadline submit assignment /by 25/12/2023 2359
+event project meeting /from 01/12/2023 1000 /to 01/12/2023 1200
+list
+mark 1
+unmark 1
+delete 2
+find book
+bye
+```
+
+## Acknowledgements
+
+This project was developed with the assistance of GitHub Copilot, which was used to auto-complete functions and write documentation.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
