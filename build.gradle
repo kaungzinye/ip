@@ -42,7 +42,7 @@ tasks.withType(Checkstyle) {
     }
 }
 application {
-    mainClass.set("gojosatoru.GojoSatoru")
+    mainClass.set("gojosatoru.GojoSatoruApp")
 }
 
 repositories {
