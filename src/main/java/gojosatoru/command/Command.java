@@ -88,9 +88,6 @@ public class Command {
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new MissingArgumentException(uiObject.showError("The date provided is invalid or incorrectly "
                 + "formatted. Please check and try again.", true));
-//            throw new MissingArgumentException(uiObject.showError("You either got no /by or name for your deadline.. "
-//                + "I don't know when your thing ends, a sorcerer should always chant when they cast their spell.",
-//                true));
         }
         try {
             LocalDateTime deadlineBy = LocalDateTime.parse(parts[1].trim(), inputFormatter);
