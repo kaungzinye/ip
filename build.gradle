@@ -43,7 +43,7 @@ tasks.withType(Checkstyle) {
     }
 }
 application {
-    mainClass.set("gojosatoru.GojoSatoruApp")
+    mainClass.set("gojosatoru.Launcher")
 }
 
 repositories {
@@ -60,6 +60,21 @@ dependencies {
     implementation "org.openjfx:javafx-controls:$javaFxVersion"
     implementation "org.openjfx:javafx-fxml:$javaFxVersion"
     implementation "org.openjfx:javafx-graphics:$javaFxVersion"
+
+    implementation "org.openjfx:javafx-base:$javaFxVersion:win"
+    implementation "org.openjfx:javafx-controls:$javaFxVersion:win"
+    implementation "org.openjfx:javafx-fxml:$javaFxVersion:win"
+    implementation "org.openjfx:javafx-graphics:$javaFxVersion:win"
+
+    implementation "org.openjfx:javafx-base:$javaFxVersion:linux"
+    implementation "org.openjfx:javafx-controls:$javaFxVersion:linux"
+    implementation "org.openjfx:javafx-fxml:$javaFxVersion:linux"
+    implementation "org.openjfx:javafx-graphics:$javaFxVersion:linux"
+
+    implementation "org.openjfx:javafx-base:$javaFxVersion:mac"
+    implementation "org.openjfx:javafx-controls:$javaFxVersion:mac"
+    implementation "org.openjfx:javafx-fxml:$javaFxVersion:mac"
+    implementation "org.openjfx:javafx-graphics:$javaFxVersion:mac"
 }
 
 test {
@@ -89,6 +104,9 @@ shadowJar {
     archiveBaseName = "gojo-satoru"
     archiveVersion = "2.0.0"
     archiveClassifier = null
+
+    mergeServiceFiles() // Ensures JavaFX services are correctly merged
+
     dependencies {
         include(dependency("org.openjfx:.*"))
     }
